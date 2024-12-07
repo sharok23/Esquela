@@ -1,5 +1,11 @@
 package com.sharok.esquela.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sharok.esquela.contract.request.StudentRequest;
 import com.sharok.esquela.contract.response.StudentResponse;
@@ -14,19 +20,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 public class StudentControllerTest {
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
-    private StudentService studentService;
+    @Autowired private MockMvc mockMvc;
+    @MockBean private StudentService studentService;
     private StudentResponse expectedResponse;
     private StudentRequest studentRequest;
 
@@ -115,8 +113,8 @@ public class StudentControllerTest {
     void deleteStudentByIdFailure() throws Exception {
         Long studentId = 2L;
 
-
-        when(studentService.deleteStudentById(studentId)).thenThrow(new StudentNotFoundException(studentId));
+        when(studentService.deleteStudentById(studentId))
+                .thenThrow(new StudentNotFoundException(studentId));
 
         mockMvc.perform(
                         delete("/v1/student/{id}", studentId)
