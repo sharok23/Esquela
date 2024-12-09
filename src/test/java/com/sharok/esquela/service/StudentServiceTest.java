@@ -9,6 +9,7 @@ import com.sharok.esquela.constant.Gender;
 import com.sharok.esquela.contract.request.StudentRequest;
 import com.sharok.esquela.contract.response.StudentResponse;
 import com.sharok.esquela.exception.StudentNotFoundException;
+import com.sharok.esquela.kafka.StudentKafkaProducer;
 import com.sharok.esquela.model.Student;
 import com.sharok.esquela.repository.StudentRepository;
 import java.util.Optional;
@@ -27,10 +28,11 @@ public class StudentServiceTest {
     private StudentRequest request;
     private StudentResponse expectedResponse;
     private Student student;
+    @Mock private StudentKafkaProducer studentKafkaProducer;
 
     @BeforeEach
     void setup() {
-        studentService = new StudentService(studentRepository, modelMapper);
+        studentService = new StudentService(studentRepository, modelMapper, studentKafkaProducer);
         request =
                 new StudentRequest(
                         "John", "Jacob", "Doe", "2012/01/02", "Male", "Kumily", 123456789);

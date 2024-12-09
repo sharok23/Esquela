@@ -1,5 +1,6 @@
 package com.sharok.esquela.contract.response;
 
+import java.time.LocalDateTime;
 import lombok.*;
 
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class StudentResponse {
     private String gender;
     private String address;
     private int phoneNumber;
+    private LocalDateTime uploadedAt;
 }

@@ -4,8 +4,10 @@ import com.sharok.esquela.constant.Gender;
 import com.sharok.esquela.contract.request.StudentRequest;
 import com.sharok.esquela.contract.response.StudentResponse;
 import com.sharok.esquela.exception.StudentNotFoundException;
+import com.sharok.esquela.kafka.StudentKafkaProducer;
 import com.sharok.esquela.model.Student;
 import com.sharok.esquela.repository.StudentRepository;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,13 @@ import org.springframework.stereotype.Service;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final ModelMapper modelMapper;
+    private final StudentKafkaProducer studentKafkaProducer;
 
     public StudentResponse addStudent(StudentRequest request) {
         Student student = modelMapper.map(request, Student.class);
+        student.setUploadedAt(LocalDateTime.now());
         Student savedStudent = studentRepository.save(student);
+        studentKafkaProducer.produce("Student added", savedStudent);
         return modelMapper.map(savedStudent, StudentResponse.class);
     }
 
@@ -60,8 +65,10 @@ public class StudentService {
                                 request.getPhoneNumber() != null
                                         ? request.getPhoneNumber()
                                         : student.getPhoneNumber())
+                        .uploadedAt(student.getUploadedAt())
                         .build();
         Student savedStudent = studentRepository.save(updateStudent);
+        studentKafkaProducer.produce("Student updated", savedStudent);
         return modelMapper.map(savedStudent, StudentResponse.class);
     }
 
@@ -69,6 +76,7 @@ public class StudentService {
         Student student =
                 studentRepository.findById(id).orElseThrow(() -> new StudentNotFoundException(id));
         studentRepository.deleteById(id);
+        studentKafkaProducer.produce("Student deleted", student);
         return "Student deleted with Id: " + id;
     }
 }
