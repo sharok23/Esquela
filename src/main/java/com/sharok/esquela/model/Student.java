@@ -1,14 +1,9 @@
 package com.sharok.esquela.model;
 
 import com.sharok.esquela.constant.Gender;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import lombok.*;
 
 @Entity
 @Getter
@@ -24,7 +19,11 @@ public class Student {
     private String middleName;
     private String lastName;
     private String dob;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+
     private String address;
     private int phoneNumber;
+    @Setter private LocalDateTime uploadedAt;
 }
