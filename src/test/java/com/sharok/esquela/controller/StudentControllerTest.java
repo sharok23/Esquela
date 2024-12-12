@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 public class StudentControllerTest extends BaseControllerTests {
@@ -43,6 +44,7 @@ public class StudentControllerTest extends BaseControllerTests {
                         .build();
     }
 
+    @WithMockUser(authorities = {"Teacher", "Manager"})
     @Test
     void AddStudentSuccess() throws Exception {
         when(studentService.addStudent(any(StudentRequest.class))).thenReturn(expectedResponse);
@@ -59,6 +61,7 @@ public class StudentControllerTest extends BaseControllerTests {
         verify(studentService, times(1)).addStudent(any(StudentRequest.class));
     }
 
+    @WithMockUser(authorities = {"Teacher", "Manager", "Student"})
     @Test
     void getStudentByIdSuccess() throws Exception {
         Long studentId = 1L;
@@ -72,6 +75,7 @@ public class StudentControllerTest extends BaseControllerTests {
         verify(studentService, times(1)).getStudentById(studentId);
     }
 
+    @WithMockUser(authorities = {"Teacher", "Manager"})
     @Test
     void updateStudentByIdSuccess() throws Exception {
         Long studentId = 1L;
@@ -91,6 +95,7 @@ public class StudentControllerTest extends BaseControllerTests {
                 .updateStudentById(eq(studentId), any(StudentRequest.class));
     }
 
+    @WithMockUser(authorities = {"Manager"})
     @Test
     void deleteStudentByIdSuccess() throws Exception {
         Long studentId = 1L;
@@ -106,6 +111,7 @@ public class StudentControllerTest extends BaseControllerTests {
         verify(studentService, times(1)).deleteStudentById(studentId);
     }
 
+    @WithMockUser(authorities = {"Manager"})
     @Test
     void deleteStudentByIdFailure() throws Exception {
         Long studentId = 2L;

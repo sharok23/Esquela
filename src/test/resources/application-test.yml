@@ -25,3 +25,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  jwt:
+    secret: mock-here
+    token:
+      validity: 86400000
+      issuer: Esquela
