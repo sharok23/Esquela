@@ -1,5 +1,8 @@
 package com.sharok.esquela.exception;
 
+import lombok.Getter;
+
+@Getter
 public class EntityNotFoundException extends RuntimeException {
     public final String entity;
     public final Long id;
